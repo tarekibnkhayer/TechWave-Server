@@ -26,7 +26,23 @@ async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
-    // Send a ping to confirm a successful connection
+
+    // connect to collection  of brands:
+    const brandCollection = client.db('TechWave').collection('brandCollection');
+    const userCollection  =  client.db('TechWave').collection('userCollection');
+
+    app.get('/brands', async(req, res) => {
+        const cursor = brandCollection.find();
+        const result = await cursor.toArray();
+        res.send(result);
+    })
+    app.post('/users', async(req, res) => {
+      const user = req.body;
+      const result = await userCollection.insertOne(user);
+      res.send(result);
+    })
+
+
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
