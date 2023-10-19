@@ -28,9 +28,10 @@ async function run() {
     await client.connect();
 
     // connect to collection  of brands:
-    const brandCollection = client.db('TechWave').collection('brandCollection');
-    const userCollection  =  client.db('TechWave').collection('userCollection');
+    const brandCollection   = client.db('TechWave').collection('brandCollection');
+    const userCollection    =  client.db('TechWave').collection('userCollection');
     const productCollection = client.db('TechWave').collection('productCollection');
+    const cartCollection    = client.db('TechWave').collection('cartCollection');
 
     app.get('/brands', async(req, res) => {
         const cursor = brandCollection.find();
@@ -49,6 +50,13 @@ async function run() {
       const query = {_id: new ObjectId(id)};
       const result = await productCollection.findOne(query);
       res.send(result);
+    });
+    app.get('/:email', async(req, res) => {
+      const email = req.params.email;
+      const query = {email: email};
+      const cursor =  cartCollection.find(query);
+      const result = await cursor.toArray();
+      res.send(result);
     })
     app.post('/users', async(req, res) => {
       const user = req.body;
@@ -60,6 +68,11 @@ async function run() {
       const result = await productCollection.insertOne(product);
       res.send(result);
     });
+    app.post('/carts', async(req, res) => {
+      const cart = req.body;
+      const result = await cartCollection.insertOne(cart);
+      res.send(result);
+    })
 
 
     await client.db("admin").command({ ping: 1 });
