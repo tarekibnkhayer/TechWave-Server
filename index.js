@@ -30,15 +30,21 @@ async function run() {
     // connect to collection  of brands:
     const brandCollection = client.db('TechWave').collection('brandCollection');
     const userCollection  =  client.db('TechWave').collection('userCollection');
+    const productCollection = client.db('TechWave').collection('productCollection');
 
     app.get('/brands', async(req, res) => {
         const cursor = brandCollection.find();
         const result = await cursor.toArray();
         res.send(result);
-    })
+    });
     app.post('/users', async(req, res) => {
       const user = req.body;
       const result = await userCollection.insertOne(user);
+      res.send(result);
+    });
+    app.post('/products', async(req, res) => {
+      const product = req.body;
+      const result = await productCollection.insertOne(product);
       res.send(result);
     })
 
