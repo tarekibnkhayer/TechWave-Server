@@ -22,6 +22,7 @@ const client = new MongoClient(uri, {
   }
 });
 
+
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
@@ -29,7 +30,7 @@ async function run() {
 
     // connect to collection  of brands:
     const brandCollection   = client.db('TechWave').collection('brandCollection');
-    const userCollection    =  client.db('TechWave').collection('userCollection');
+    const userCollection    = client.db('TechWave').collection('userCollection');
     const productCollection = client.db('TechWave').collection('productCollection');
     const cartCollection    = client.db('TechWave').collection('cartCollection');
     const commentCollection = client.db('TechWave').collection('commentCollection');
@@ -58,7 +59,16 @@ async function run() {
       const cursor =  cartCollection.find(query);
       const result = await cursor.toArray();
       res.send(result);
+    });
+
+    app.get('/trending/:yes', async(req, res) => {
+      const trending = req.params.yes;
+      const query = {trending: trending};
+      const cursor = productCollection.find(query);
+      const result = await cursor.toArray();
+      res.send(result);
     })
+
     app.post('/users', async(req, res) => {
       const user = req.body;
       const result = await userCollection.insertOne(user);
