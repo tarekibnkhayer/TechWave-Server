@@ -32,6 +32,7 @@ async function run() {
     const userCollection    =  client.db('TechWave').collection('userCollection');
     const productCollection = client.db('TechWave').collection('productCollection');
     const cartCollection    = client.db('TechWave').collection('cartCollection');
+    const commentCollection = client.db('TechWave').collection('commentCollection');
 
     app.get('/brands', async(req, res) => {
         const cursor = brandCollection.find();
@@ -73,6 +74,12 @@ async function run() {
       const result = await cartCollection.insertOne(cart);
       res.send(result);
     });
+
+    app.post('/comments', async(req, res) => {
+      const comment = req.body;
+      const result = await commentCollection.insertOne(comment);
+      res.send(result);
+    })
 
     app.put('/products/:id', async(req, res) => {
       const product = req.body;
